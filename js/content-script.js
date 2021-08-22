@@ -186,3 +186,19 @@ waitForEl(".sc-ewjm65-7", function () {
         handleNameAdd();
     });
 });
+
+function checkDOMChange() {
+    try {
+        $(".sc-ewjm65-7").each((ind, el) => {
+            if ($(el).find('button.split-btn').length == 0) {
+                $(el).append('<button class="split-btn default-button">Split</button>');
+            }
+        });
+    }
+    catch (e) {
+        // ignore the error and continue calling the function
+    }
+    setTimeout(checkDOMChange, 500);
+}
+
+checkDOMChange();
