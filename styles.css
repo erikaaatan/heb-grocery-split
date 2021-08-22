@@ -17,11 +17,17 @@
 
 .overlay {
     z-index: 999;
-    background-color: #FF7F7F;
+    border: 5px solid #FF7F7F;
+    border-radius: 10px;
+    background-color: white;
     text-align: center;
     display: none;
     padding: 10px;
     width: 50%;
+}
+
+#pick-people input {
+    margin-left: 10px;
 }
 
 #name-add {
@@ -33,12 +39,46 @@
     margin-right: 10px;
 }
 
+#name-add input[type='submit'] {
+    background-color: #FF7F7F;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 .split-btn {
     margin-left: auto;
     margin-right: auto;
 }
 
 #totals table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#split-popup-close, #totals-popup-close {
+    position: absolute;
+    background: red;
+    color: white;
+    top: -10px;
+    right: -10px;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#split-popup-close:hover {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0 0);
+}
+
+.form-container {
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
 }

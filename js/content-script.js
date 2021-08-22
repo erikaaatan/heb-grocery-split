@@ -10,16 +10,18 @@ var waitForEl = function (selector, callback) {
 
 var splitPopup = `
 <div id="split" class="center overlay">
-    <h3>Split item: <span id="split-item"></span></h3>
-    <h3>Total price: <span class="price"></span></h3>
-    <form id="pick-people">
-    </form>
-    <form id="name-add">
-        <input type="text" id="new-name" name="new-name"><br>
-        <input type="submit" value="Add person">
-    </form>
-    <h3>Total price per person: <span class="price"></span> / <span id="num-people"></span> = <span id="price-per-person"></span></h3>
-    <button id="split-popup-close">Close</button>
+    <h3><span id="split-item"></span></h3>
+    <h5>Total price: <span class="price"></span></h5>
+    <div class="form-container">
+        <form id="pick-people">
+        </form>
+        <form id="name-add">
+            <input type="text" id="new-name" name="new-name"><br>
+            <input type="submit" value="Add person">
+        </form>
+    </div>
+    <h5>Total price per person: <span class="price"></span> / <span id="num-people"></span> = <span id="price-per-person"></span></h5>
+    <button id="split-popup-close">X</button>
 </div>  
 `;
 
@@ -36,7 +38,7 @@ var totalsPopup = `
         <tbody>
         </tbody>
     </table>
-    <button id="totals-popup-close">Close</button>
+    <button id="totals-popup-close">X</button>
 </div>  
 `;
 
@@ -88,7 +90,7 @@ function handleNameAdd() {
     if (newName == "") {
         return;
     }
-    $("#pick-people").append(`<input type="checkbox" id="${newName}" name="${newName}" value="${newName}"><label for="${newName}">${newName}</label><br>`);
+    $("#pick-people").append(`<label for="${newName}"  style="word-wrap:break-word"><span>${newName}</span><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"></label>`);
     $(`#${newName}`).bind("click", function() {
         var checkboxStatus = $(this).prop("checked");
         handleCheckboxChange(newName, checkboxStatus);
