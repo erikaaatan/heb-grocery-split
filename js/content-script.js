@@ -64,12 +64,10 @@ function handleCheckboxChange(name, checkboxStatus) {
     if (checkboxStatus) {
         if (item in pickedPeoplePerItem) {
             pickedPeoplePerItem[item].add(name);
-        } 
-        else {
+        } else {
             pickedPeoplePerItem[item] = new Set([name]);
         }
-    }
-    else {
+    } else {
         pickedPeoplePerItem[item].delete(name);
     }
 
@@ -78,8 +76,7 @@ function handleCheckboxChange(name, checkboxStatus) {
         $("#num-people").text(numPeople);
         var pricePerPerson = calculatePricePerPerson(item);
         $("#price-per-person").text(pricePerPerson);
-    }
-    else {
+    } else {
         $("#num-people").text("");
         $("#price-per-person").text("");
     }
@@ -91,11 +88,11 @@ function handleNameAdd() {
         return;
     }
     $("#pick-people").append(`<label for="${newName}"  style="word-wrap:break-word"><span>${newName}</span><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"></label>`);
-    $(`#${newName}`).bind("click", function() {
+    $(`#${newName}`).bind("click", function () {
         var checkboxStatus = $(this).prop("checked");
         handleCheckboxChange(newName, checkboxStatus);
     });
-    
+
     $("#name-add").trigger("reset");
 }
 
@@ -115,20 +112,19 @@ function handleSplitClick(ind) {
             $(`#${name}`).prop("checked", true);
         });
     }
-    
+
     if (item in pickedPeoplePerItem) {
         var numPeople = pickedPeoplePerItem[item].size;
         $("#num-people").text(numPeople);
         var pricePerPerson = calculatePricePerPerson(item);
         $("#price-per-person").text(pricePerPerson);
-    }
-    else {
+    } else {
         $("#num-people").text("");
         $("#price-per-person").text("");
     }
 
     if (!(item in pricePerItem)) {
-        pricePerItem[item] = Number(price.replace(/[^0-9.-]+/g,""));
+        pricePerItem[item] = Number(price.replace(/[^0-9.-]+/g, ""));
     }
 }
 
@@ -143,8 +139,7 @@ function handleTotalsClick() {
         pickedPeoplePerItem[item].forEach((person) => {
             if (person in moneyOwedPerPerson) {
                 moneyOwedPerPerson[person] += pricePerPerson;
-            }
-            else {
+            } else {
                 moneyOwedPerPerson[person] = pricePerPerson;
             }
         });
@@ -160,7 +155,7 @@ waitForEl(".sc-ewjm65-7", function () {
     // begin html injection
     $("body").append(splitPopup);
     $("body").append(totalsPopup);
-    $(".sc-ewjm65-7").append('<button class="split-btn default-button">Split</button>');
+    $(".sc-ewjm65-7").append('<div class="center-text"><span class="split-btn">Split</span></div>');
     $(".sc-41c2f-4.kNeyVG").append('<button id="totals-btn" class="default-button">View totals per person</button>');
 
     // begin button bindings
@@ -177,11 +172,11 @@ waitForEl(".sc-ewjm65-7", function () {
         handleSplitClick(ind);
     });
 
-    $("#totals-btn").bind("click", function() {
+    $("#totals-btn").bind("click", function () {
         handleTotalsClick();
     });
 
-    $("#name-add").submit(function( event ) {
+    $("#name-add").submit(function (event) {
         event.preventDefault();
         handleNameAdd();
     });
@@ -190,12 +185,11 @@ waitForEl(".sc-ewjm65-7", function () {
 function checkDOMChange() {
     try {
         $(".sc-ewjm65-7").each((ind, el) => {
-            if ($(el).find('button.split-btn').length == 0) {
-                $(el).append('<button class="split-btn default-button">Split</button>');
+            if ($(el).find('span.split-btn').length == 0) {
+                $(el).append('<div class="center-text"><span class="split-btn">Split</span></div>');
             }
         });
-    }
-    catch (e) {
+    } catch (e) {
         // ignore the error and continue calling the function
     }
     setTimeout(checkDOMChange, 500);
