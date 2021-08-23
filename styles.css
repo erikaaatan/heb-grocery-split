@@ -21,7 +21,7 @@
 }
 
 #pick-people input {
-    margin-left: 10px;
+    margin-right: 1em;
 }
 
 #name-add {
@@ -86,4 +86,15 @@
 
 #split, #totals {
     max-width: 50vw;
+}
+
+.name-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.remove-name {
+    margin-left: 1em;
+    cursor: pointer;
+    text-decoration: underline;
 }

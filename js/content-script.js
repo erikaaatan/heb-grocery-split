@@ -87,10 +87,44 @@ function handleNameAdd() {
     if (newName == "") {
         return;
     }
-    $("#pick-people").append(`<label for="${newName}"  style="word-wrap:break-word"><span>${newName}</span><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"></label>`);
+
+    var people;
+    chrome.storage.sync.get("people", function (result) {
+        if (result.people === undefined) {
+            people = [];
+        } else {
+            people = result.people;
+            console.log(people);
+        }
+        console.log(people);
+        people.push(newName);
+        chrome.storage.sync.set({
+            people: people
+        }, function () {
+            console.log('People is set to ' + people);
+        });
+    })
+
+
+    $("#pick-people").append(`<div class="name-row" id="row-${newName}"><label for="${newName}"  style="word-wrap:break-word"><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"><span>${newName}</span></label><span id="remove-${newName}" class="remove-name">Remove</span></div>`);
     $(`#${newName}`).bind("click", function () {
         var checkboxStatus = $(this).prop("checked");
         handleCheckboxChange(newName, checkboxStatus);
+    });
+    $(`#remove-${newName}`).bind("click", function () {
+        $(`#row-${newName}`).remove();
+
+        chrome.storage.sync.get("people", function (result) {
+            people = result.people;
+            people = people.filter(function(item) {
+                return item !== newName
+            })
+            chrome.storage.sync.set({
+                people: people
+            }, function () {
+                console.log('People is set to ' + people);
+            });
+        })
     });
 
     $("#name-add").trigger("reset");
@@ -129,6 +163,7 @@ function handleSplitClick(ind) {
 }
 
 function handleTotalsClick() {
+    $("#totals").css("display", "block");
     $('#person-totals tbody').empty();
 
     var moneyOwedPerPerson = {};
@@ -156,6 +191,38 @@ waitForEl(".sc-ewjm65-7", function () {
     $(".sc-ewjm65-7").append('<div class="center-text"><span class="split-btn">Split</span></div>');
     $(".sc-41c2f-4.kNeyVG").append('<button id="totals-btn" class="default-button">View totals per person</button>');
 
+    // configure people from storage
+    var people;
+    chrome.storage.sync.get("people", function (result) {
+        if (result.people === undefined) {
+            people = [];
+        } else {
+            people = result.people;
+        }
+        people.forEach((newName) => {
+            $("#pick-people").append(`<div class="name-row" id="row-${newName}"><label for="${newName}"  style="word-wrap:break-word"><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"><span>${newName}</span></label><span id="remove-${newName}" class="remove-name">Remove</span></div>`);
+            $(`#${newName}`).bind("click", function () {
+                var checkboxStatus = $(this).prop("checked");
+                handleCheckboxChange(newName, checkboxStatus);
+            });
+            $(`#remove-${newName}`).bind("click", function () {
+                $(`#row-${newName}`).remove();
+        
+                chrome.storage.sync.get("people", function (result) {
+                    people = result.people;
+                    people = people.filter(function(item) {
+                        return item !== newName
+                    })
+                    chrome.storage.sync.set({
+                        people: people
+                    }, function () {
+                        console.log('People is set to ' + people);
+                    });
+                })
+            });
+        })
+    })
+
     // begin button bindings
     $('#split-popup-close').bind('click', function () {
         $("#split").css("display", "none");
@@ -181,6 +248,7 @@ waitForEl(".sc-ewjm65-7", function () {
 });
 
 function checkDOMChange() {
+    console.log("calling")
     try {
         $(".sc-ewjm65-7").each((ind, el) => {
             if ($(el).find('span.split-btn').length == 0) {
