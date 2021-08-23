@@ -8,7 +8,7 @@ var waitForEl = function (selector, callback) {
     }
 };
 
-var splitPopup = `
+const splitPopup = `
 <div id="split" class="center overlay">
     <h3><span id="split-item"></span></h3>
     <h5>Total price: <span class="price"></span></h5>
@@ -25,7 +25,7 @@ var splitPopup = `
 </div>  
 `;
 
-var totalsPopup = `
+const totalsPopup = `
 <div id="totals" class="center overlay">
     <h3>Totals per person</h3>
     <table id="person-totals">
@@ -129,8 +129,6 @@ function handleSplitClick(ind) {
 }
 
 function handleTotalsClick() {
-    $("#totals").css("display", "block");
-
     $('#person-totals tbody').empty();
 
     var moneyOwedPerPerson = {};
@@ -192,7 +190,7 @@ function checkDOMChange() {
     } catch (e) {
         // ignore the error and continue calling the function
     }
-    setTimeout(checkDOMChange, 500);
+    setTimeout(checkDOMChange, 1000);
 }
 
 checkDOMChange();

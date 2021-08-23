@@ -1,10 +1,3 @@
 body {
-    min-width: 370px;
-    min-height: 400px;
     position: relative;
-}
-
-#totals table {
-    margin-left: auto;
-    margin-right: auto;
 }
