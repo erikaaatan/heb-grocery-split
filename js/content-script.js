@@ -130,8 +130,8 @@ waitForEl(`${ITEM_CLASS}`, function () {
     // begin html injection
     $("body").append(splitPopup);
     $("body").append(totalsPopup);
-    $(`${ITEM_CLASS}`).append('<div class="center-text"><span class="split-btn">Split</span></div>');
-    $(`${CART_CLASSES}`).append('<button id="totals-btn" class="default-button">View totals per person</button>');
+    $(`${ITEM_CLASS}`).append('<div class="center-text"><span class="split-btn heb-grocery-split-btn">Split</span></div>');
+    $(`${CART_CLASSES}`).append('<span id="totals-btn" class="heb-grocery-split-btn">View totals per person</span>');
 
     // configure people from storage
     var people;

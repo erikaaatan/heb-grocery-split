@@ -42,7 +42,7 @@
     cursor: pointer;
 }
 
-.split-btn {
+.heb-grocery-split-btn {
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;
@@ -52,6 +52,7 @@
     padding-right: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
+    text-align: center;
 }
 
 #totals table {
@@ -97,4 +98,8 @@
     margin-left: 1em;
     cursor: pointer;
     text-decoration: underline;
+}
+
+#totals-btn {
+    margin-left: 1em;
 }
