@@ -10,7 +10,7 @@
   "content_scripts": [{
     "matches": ["https://*.heb.com/*"],
     "css": ["styles.css"],
-    "js": ["js/lib/jquery-3.3.1.min.js", "js/content-script.js"]
+    "js": ["js/lib/jquery-3.3.1.min.js", "js/constants.js", "js/util.js", "js/content-script.js"]
   }],
   "page_action": {
     "default_popup": "popup.html",

@@ -1,64 +1,37 @@
-var waitForEl = function (selector, callback) {
-    if (jQuery(selector).length) {
-        callback();
-    } else {
-        setTimeout(function () {
-            waitForEl(selector, callback);
-        }, 100);
-    }
-};
-
-const splitPopup = `
-<div id="split" class="center overlay">
-    <h3><span id="split-item"></span></h3>
-    <h5>Total price: <span class="price"></span></h5>
-    <div class="form-container">
-        <form id="pick-people">
-        </form>
-        <form id="name-add">
-            <input type="text" id="new-name" name="new-name"><br>
-            <input type="submit" value="Add person">
-        </form>
-    </div>
-    <h5>Total price per person: <span class="price"></span> / <span id="num-people"></span> = <span id="price-per-person"></span></h5>
-    <button id="split-popup-close">X</button>
-</div>  
-`;
-
-const totalsPopup = `
-<div id="totals" class="center overlay">
-    <h3>Totals per person</h3>
-    <table id="person-totals">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Amount</th>
-            <tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <button id="totals-popup-close">X</button>
-</div>  
-`;
-
 var pickedPeoplePerItem = {};
 var pricePerItem = {};
 
+/**************************
+ * BEGIN HELPERS
+ **************************/
 function calculatePricePerPerson(item) {
     var numPeople = pickedPeoplePerItem[item].size;
     var price = pricePerItem[item];
     return price / numPeople;
 }
 
-function getItem(ind) {
-    return $(".sc-1pvqt4t-0.sc-ewjm65-5.jZkQzI a span").eq(ind).text();
+function generatePickPersonRow(newName) {
+    $("#pick-people").append(
+        `<div class="name-row" id="row-${newName}">
+            <label for="${newName}"  style="word-wrap:break-word">
+                <input type="checkbox" id="${newName}" name="${newName}" value="${newName}">
+                <span>${newName}</span>
+            </label>
+            <span id="remove-${newName}" class="remove-name">Remove</span>
+        </div>`);
+    $(`#${newName}`).bind("click", function () {
+        var checkboxStatus = $(this).prop("checked");
+        handleCheckboxChange(newName, checkboxStatus);
+    });
+    $(`#remove-${newName}`).bind("click", function () {
+        $(`#row-${newName}`).remove();
+        removePersonFromStorage(newName);
+    });
 }
 
-function getPrice(ind) {
-    return $("span.sc-ewjm65-8.dSgOCi:eq(" + ind + ")").text();
-}
-
+/**************************
+ * BEGIN ACTION HANDLERS
+ **************************/
 function handleCheckboxChange(name, checkboxStatus) {
     var item = $("#split-item").text();
     if (checkboxStatus) {
@@ -88,45 +61,10 @@ function handleNameAdd() {
         return;
     }
 
-    var people;
-    chrome.storage.sync.get("people", function (result) {
-        if (result.people === undefined) {
-            people = [];
-        } else {
-            people = result.people;
-            console.log(people);
-        }
-        console.log(people);
-        people.push(newName);
-        chrome.storage.sync.set({
-            people: people
-        }, function () {
-            console.log('People is set to ' + people);
-        });
-    })
+    addPersonToStorage(newName);
+    generatePickPersonRow(newName);
 
-
-    $("#pick-people").append(`<div class="name-row" id="row-${newName}"><label for="${newName}"  style="word-wrap:break-word"><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"><span>${newName}</span></label><span id="remove-${newName}" class="remove-name">Remove</span></div>`);
-    $(`#${newName}`).bind("click", function () {
-        var checkboxStatus = $(this).prop("checked");
-        handleCheckboxChange(newName, checkboxStatus);
-    });
-    $(`#remove-${newName}`).bind("click", function () {
-        $(`#row-${newName}`).remove();
-
-        chrome.storage.sync.get("people", function (result) {
-            people = result.people;
-            people = people.filter(function(item) {
-                return item !== newName
-            })
-            chrome.storage.sync.set({
-                people: people
-            }, function () {
-                console.log('People is set to ' + people);
-            });
-        })
-    });
-
+    // clear the textbox
     $("#name-add").trigger("reset");
 }
 
@@ -183,13 +121,17 @@ function handleTotalsClick() {
     }
 }
 
+/**************************
+ * BEGIN CONTENT SCRIPT
+ **************************/
+
 // wait for cart items to appear
-waitForEl(".sc-ewjm65-7", function () {
+waitForEl(`${ITEM_CLASS}`, function () {
     // begin html injection
     $("body").append(splitPopup);
     $("body").append(totalsPopup);
-    $(".sc-ewjm65-7").append('<div class="center-text"><span class="split-btn">Split</span></div>');
-    $(".sc-41c2f-4.kNeyVG").append('<button id="totals-btn" class="default-button">View totals per person</button>');
+    $(`${ITEM_CLASS}`).append('<div class="center-text"><span class="split-btn">Split</span></div>');
+    $(`${CART_CLASSES}`).append('<button id="totals-btn" class="default-button">View totals per person</button>');
 
     // configure people from storage
     var people;
@@ -200,28 +142,9 @@ waitForEl(".sc-ewjm65-7", function () {
             people = result.people;
         }
         people.forEach((newName) => {
-            $("#pick-people").append(`<div class="name-row" id="row-${newName}"><label for="${newName}"  style="word-wrap:break-word"><input type="checkbox" id="${newName}" name="${newName}" value="${newName}"><span>${newName}</span></label><span id="remove-${newName}" class="remove-name">Remove</span></div>`);
-            $(`#${newName}`).bind("click", function () {
-                var checkboxStatus = $(this).prop("checked");
-                handleCheckboxChange(newName, checkboxStatus);
-            });
-            $(`#remove-${newName}`).bind("click", function () {
-                $(`#row-${newName}`).remove();
-        
-                chrome.storage.sync.get("people", function (result) {
-                    people = result.people;
-                    people = people.filter(function(item) {
-                        return item !== newName
-                    })
-                    chrome.storage.sync.set({
-                        people: people
-                    }, function () {
-                        console.log('People is set to ' + people);
-                    });
-                })
-            });
-        })
-    })
+            generatePickPersonRow(newName);
+        });
+    });
 
     // begin button bindings
     $('#split-popup-close').bind('click', function () {
@@ -250,7 +173,7 @@ waitForEl(".sc-ewjm65-7", function () {
 function checkDOMChange() {
     console.log("calling")
     try {
-        $(".sc-ewjm65-7").each((ind, el) => {
+        $(`${ITEM_CLASS}`).each((ind, el) => {
             if ($(el).find('span.split-btn').length == 0) {
                 $(el).append('<div class="center-text"><span class="split-btn">Split</span></div>');
             }
