@@ -16,33 +16,40 @@ function getPrice(ind) {
     return $(`span.${PRICE_CLASS}:eq(` + ind + `)`).text();
 }
 
-function addPersonToStorage(name) {
-    var people;
-    chrome.storage.sync.get("people", function (result) {
-        if (result.people === undefined) {
-            people = [];
-        } else {
-            people = result.people;
+async function getPeopleFromStorage() {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.storage.sync.get("people", function (value) {
+                resolve(value["people"]);
+            })
         }
-        people.push(name);
-        chrome.storage.sync.set({
-            people: people
-        }, function () {
-            console.log('People is set to ' + people);
-        });
+        catch (ex) {
+            reject(ex);
+        }
     });
 }
 
-function removePersonFromStorage(name) {
-    chrome.storage.sync.get("people", function (result) {
-        people = result.people;
-        people = people.filter(function(item) {
-            return item !== name
-        });
-        chrome.storage.sync.set({
-            people: people
-        }, function () {
-            console.log('People is set to ' + people);
-        });
+async function addPersonToStorage(name) {
+    var people = await getPeopleFromStorage();
+    if (people === undefined) {
+        people = [];
+    }
+    people.push(name);
+    chrome.storage.sync.set({
+        people: people
+    }, function () {
+        console.log('People is set to ' + people);
+    });
+}
+
+async function removePersonFromStorage(name) {
+    var people = await getPeopleFromStorage();
+    people = people.filter(function(item) {
+        return item !== name
+    });
+    chrome.storage.sync.set({
+        people: people
+    }, function () {
+        console.log('People is set to ' + people);
     });
 }

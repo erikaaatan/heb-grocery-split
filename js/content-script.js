@@ -100,19 +100,21 @@ function handleSplitClick(ind) {
     }
 }
 
-function handleTotalsClick() {
+async function handleTotalsClick() {
     $("#totals").css("display", "block");
     $('#person-totals tbody').empty();
 
     var moneyOwedPerPerson = {};
+    // initialize everyone to 0
+    var people = await getPeopleFromStorage();
+    people.forEach((person) => {
+        moneyOwedPerPerson[person] = 0;
+    });
+    
     for (var item in pickedPeoplePerItem) {
         pricePerPerson = calculatePricePerPerson(item);
         pickedPeoplePerItem[item].forEach((person) => {
-            if (person in moneyOwedPerPerson) {
-                moneyOwedPerPerson[person] += pricePerPerson;
-            } else {
-                moneyOwedPerPerson[person] = pricePerPerson;
-            }
+            moneyOwedPerPerson[person] += pricePerPerson;
         });
     }
 
