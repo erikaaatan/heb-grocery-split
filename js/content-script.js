@@ -101,25 +101,33 @@ function handleSplitClick(ind) {
 }
 
 async function handleTotalsClick() {
-    $("#totals").css("display", "block");
+    $("#totals-wrapper").css("display", "block");
     $('#person-totals tbody').empty();
 
     var moneyOwedPerPerson = {};
-    // initialize everyone to 0
+    var itemsPerPerson = {};
+
     var people = await getPeopleFromStorage();
     people.forEach((person) => {
         moneyOwedPerPerson[person] = 0;
+        itemsPerPerson[person] = [];
     });
-    
+
     for (var item in pickedPeoplePerItem) {
         pricePerPerson = calculatePricePerPerson(item);
         pickedPeoplePerItem[item].forEach((person) => {
             moneyOwedPerPerson[person] += pricePerPerson;
+            itemsPerPerson[person].push(item);
         });
     }
 
     for (var person in moneyOwedPerPerson) {
-        $("#person-totals tbody").append(`<tr><td>${person}</td><td>${moneyOwedPerPerson[person]}</td></tr>`)
+        $("#person-totals tbody").append(
+            `<tr>
+                <td>${person}</td>
+                <td>${moneyOwedPerPerson[person]}</td>
+                <td>${formatItems(itemsPerPerson[person])}</td>
+            </tr>`);
     }
 }
 
@@ -132,8 +140,8 @@ waitForEl(`${ITEM_CLASS}`, function () {
     // begin html injection
     $("body").append(splitPopup);
     $("body").append(totalsPopup);
-    $(`${ITEM_CLASS}`).append('<div class="center-text"><span class="split-btn heb-grocery-split-btn">Split</span></div>');
-    $(`${CART_CLASSES}`).append('<span id="totals-btn" class="heb-grocery-split-btn">View totals per person</span>');
+    $(`${ITEM_CLASS}`).append(splitButton);
+    $(`${CART_CLASSES}`).append(totalsButton);
 
     // configure people from storage
     var people;
@@ -154,7 +162,7 @@ waitForEl(`${ITEM_CLASS}`, function () {
     });
 
     $('#totals-popup-close').bind('click', function () {
-        $("#totals").css("display", "none");
+        $("#totals-wrapper").css("display", "none");
     });
 
     $('.split-btn').bind('click', function () {
@@ -177,7 +185,11 @@ function checkDOMChange() {
     try {
         $(`${ITEM_CLASS}`).each((ind, el) => {
             if ($(el).find('span.split-btn').length == 0) {
-                $(el).append('<div class="center-text"><span class="split-btn">Split</span></div>');
+                $(el).append(splitButton);
+                $('.split-btn').bind('click', function () {
+                    var ind = $(this).index(".split-btn");
+                    handleSplitClick(ind);
+                });
             }
         });
     } catch (e) {

@@ -53,3 +53,7 @@ async function removePersonFromStorage(name) {
         console.log('People is set to ' + people);
     });
 }
+
+function formatItems(itemList) {
+    return itemList.join(", ");
+}
