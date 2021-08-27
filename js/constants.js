@@ -1,5 +1,5 @@
 const ITEM_NAME_CLASSES = "sc-1pvqt4t-0.sc-ewjm65-5.jZkQzI";
-const PRICE_CLASS = "sc-ewjm65-8.dSgOCi";
+const PRICE_CLASS = "sc-ewjm65-8";
 const ITEM_CLASS = ".sc-ewjm65-7";
 const CART_CLASSES = ".sc-41c2f-4.kNeyVG";
 
