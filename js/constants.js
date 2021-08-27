@@ -4,8 +4,8 @@ const ITEM_CLASS = ".sc-ewjm65-7";
 const CART_CLASSES = ".sc-41c2f-4.kNeyVG";
 
 const splitButton = `
-    <div class="center-text">
-        <span class="split-btn heb-grocery-split-btn">Split</span>
+    <div class="center-text split-btn">
+        Split
     </div>
     `;
 

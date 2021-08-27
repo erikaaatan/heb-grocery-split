@@ -184,7 +184,7 @@ function checkDOMChange() {
     console.log("calling")
     try {
         $(`${ITEM_CLASS}`).each((ind, el) => {
-            if ($(el).find('span.split-btn').length == 0) {
+            if ($(el).find('.split-btn').length == 0) {
                 $(el).append(splitButton);
                 $('.split-btn').bind('click', function () {
                     var ind = $(this).index(".split-btn");
