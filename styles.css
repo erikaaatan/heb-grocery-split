@@ -11,7 +11,7 @@
 
 .overlay {
     width: 50vw;
-    z-index: 999;
+    z-index: 9999;
     border: 5px solid #FF7F7F;
     border-radius: 10px;
     background-color: white;
