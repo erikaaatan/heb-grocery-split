@@ -101,6 +101,7 @@ function handleSplitClick(ind) {
 }
 
 async function handleTotalsClick() {
+    console.log(getAllItemsInCart());
     $("#totals-wrapper").css("display", "block");
     $('#person-totals tbody').empty();
 
@@ -113,6 +114,9 @@ async function handleTotalsClick() {
         itemsPerPerson[person] = [];
     });
 
+    // TODO: calculate prices per item here
+    // make calculatePricePerPerson take in item AND price
+    // bc there's a bug where if the price gets changed, its value doesn't get updated in the map
     for (var item in pickedPeoplePerItem) {
         pricePerPerson = calculatePricePerPerson(item);
         pickedPeoplePerItem[item].forEach((person) => {

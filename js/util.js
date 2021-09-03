@@ -8,6 +8,12 @@ var waitForEl = function (selector, callback) {
     }
 };
 
+function getAllItemsInCart() {
+    return $(`.${ITEM_NAME_CLASSES} a span`).map(function(){
+        return $.trim($(this).text());
+    }).get();
+}
+
 function getItem(ind) {
     return $(`.${ITEM_NAME_CLASSES} a span`).eq(ind).text();
 }
