@@ -45,7 +45,9 @@ const totalsPopup = `
                 <tbody>
                 </tbody>
             </table>
+            <h5>Items that haven't been split yet:</h5>
+            <p id="unsplit-items"></p>
             <button id="totals-popup-close">X</button>
-        </div>  
+        </div>
     </div>
     `;

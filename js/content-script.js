@@ -125,6 +125,9 @@ async function handleTotalsClick() {
         });
     }
 
+    let unsplitItems = getAllItemsInCart().filter(item => !(item in pickedPeoplePerItem));
+    $("#unsplit-items").text(unsplitItems.join(" | "));
+
     for (var person in moneyOwedPerPerson) {
         $("#person-totals tbody").append(
             `<tr>
